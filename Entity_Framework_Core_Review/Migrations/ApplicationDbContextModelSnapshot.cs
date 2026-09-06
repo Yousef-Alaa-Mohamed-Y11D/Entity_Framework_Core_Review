@@ -54,9 +54,9 @@ namespace Entity_Framework_Core_Review.Migrations
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("BlogUrl");
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(200)")
+                        .HasComment("This is url of the blog");
 
                     b.Property<DateTime>("addedOn")
                         .HasColumnType("datetime2")
@@ -64,10 +64,28 @@ namespace Entity_Framework_Core_Review.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Blogs", "Blogging", t =>
-                        {
-                            t.ExcludeFromMigrations();
-                        });
+                    b.ToTable("Blogs", "Blogging");
+                });
+
+            modelBuilder.Entity("Entity_Framework_Core_Review.Models.Book", b =>
+                {
+                    b.Property<int>("BookNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookNumber"));
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("BookNumber");
+
+                    b.ToTable("Books", "Blogging");
                 });
 
             modelBuilder.Entity("Entity_Framework_Core_Review.Models.Post", b =>

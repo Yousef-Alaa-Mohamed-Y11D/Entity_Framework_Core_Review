@@ -15,16 +15,17 @@ namespace Entity_Framework_Core_Review
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AuditEntry>(); // Domain class for AuditEntry
-            modelBuilder.ApplyConfiguration
-                (new BlogEntityTypeConfigration());
+            modelBuilder.ApplyConfiguration(new BlogEntityTypeConfigration());
             modelBuilder.ApplyConfiguration(new PostEntityTableConfigration());
-            modelBuilder.Entity<Blog>().ToTable("Blogs", b => b.ExcludeFromMigrations());
+            modelBuilder.ApplyConfiguration(new BookEntityTypeConfigration());
+            //modelBuilder.Entity<Blog>().ToTable("Blogs", b => b.ExcludeFromMigrations());
             modelBuilder.HasDefaultSchema("Blogging"); // default schema for all tables in the model
 
             modelBuilder.Entity<Post>().ToView("SelectPosts" , schema: "Blogging"); // map Post entity to a view named SelectPosts in the Blogging schema
 
         }
         public DbSet<Blog> Blogs { get; set; }
+        public DbSet<Book> Books { get; set; }
 
 
     }

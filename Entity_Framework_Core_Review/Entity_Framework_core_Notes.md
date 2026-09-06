@@ -962,3 +962,120 @@ Name → "The user's full name"
 ### Important
 
 `HasComment()` is mainly used to **document the database schema**. It does **not** affect the application's logic or query performance.
+-----------------
+# Set Primary Key
+
+You can configure a **Primary Key** using Data Annotations or Fluent API.
+
+### Using Data Annotation
+
+```csharp
+[Key]
+public int Id { get; set; }
+```
+
+### Using Fluent API
+
+```csharp
+modelBuilder.Entity<Post>()
+    .HasKey(p => p.Id);
+```
+
+### Composite Primary Key
+
+For a Primary Key with multiple columns:
+
+```csharp
+modelBuilder.Entity<Post>()
+    .HasKey(p => new { p.BlogId, p.Id });
+```
+
+### Result
+
+```text
+Id → Primary Key
+```
+
+A Primary Key **uniquely identifies each record** in the table.
+-------------
+# Primary Key Convention in EF Core
+
+EF Core can automatically detect the Primary Key in **two cases**:
+
+### 1. Property named `Id`
+
+```csharp
+public class Post
+{
+    public int Id { get; set; }
+}
+```
+
+EF Core automatically treats `Id` as the **Primary Key**.
+
+### 2. Property named `{EntityName}Id`
+
+```csharp
+public class Post
+{
+    public int PostId { get; set; }
+}
+```
+
+EF Core automatically treats `PostId` as the **Primary Key**.
+
+### When do you need to configure it?
+
+If the property has a different name:
+
+```csharp
+public class Post
+{
+    public int Code { get; set; }
+}
+```
+
+You need to configure it explicitly:
+
+```csharp
+[Key]
+public int Code { get; set; }
+```
+
+Or using Fluent API:
+
+```csharp
+modelBuilder.Entity<Post>()
+    .HasKey(p => p.Code);
+```
+
+### Summary
+
+```text
+Id          → Convention → Primary Key
+PostId      → Convention → Primary Key
+Code        → Configure manually
+```
+----------
+# Change Primary Key Constraint Name
+
+If you want to change the **name of the Primary Key constraint** in the database, use `HasName()`.
+
+```csharp
+modelBuilder.Entity<Post>()
+    .HasKey(p => p.Id)
+    .HasName("PK_Post_Custom");
+```
+
+### Result
+
+```text
+Property:           Id
+Primary Key:        PK_Post_Custom
+```
+
+`HasKey()` → Defines **which property is the Primary Key**.
+
+`HasName()` → Defines **the name of the Primary Key constraint**.
+
+> The property name remains `Id`; only the database constraint name changes.
